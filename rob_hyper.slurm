@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=rob_hyper
+#SBATCH --open-mode=append
+#SBATCH --output=/scratch/yz5880/301/%j_%x.out
+#SBATCH --error=/scratch/yz5880/301/%j_%x.err
+#SBATCH --export=ALL
+#SBATCH --account=ds-ua-301-2022sp
+#SBATCH --partition=n1s8-v100-1
+#SBATCH --time=04:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --requeue
+#SBATCH --mem=20G
+#SBATCH -c 4
+
+singularity exec --nv --bind /scratch/yz5880 --overlay /scratch/yz5880/overlay-25GB-500K.ext3:ro /scratch/yz5880/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif /bin/bash -c "
+source /ext3/env.sh
+conda activate
+python /scratch/yz5880/301/rob_hyper.py BoolQ/
+"
